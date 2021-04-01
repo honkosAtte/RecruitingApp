@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using RecruitingApp.Configurations;
 using RecruitingApp.Data;
+using RecruitingApp.IRepository;
+using RecruitingApp.Repository;
 
 namespace RecruitingApp
 {
@@ -41,13 +43,15 @@ namespace RecruitingApp
             });
 
             services.AddAutoMapper(typeof(AutoMapperInitializer));
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "RecruitingApp", Version = "v1" });
             });
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(x =>
+                x.SerializerSettings.ReferenceLoopHandling  = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
