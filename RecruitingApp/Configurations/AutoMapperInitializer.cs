@@ -16,6 +16,7 @@ namespace RecruitingApp.Configurations
             CreateMap<Applicant, CreateApplicantDTO>().ReverseMap();
             CreateMap<Job, JobDTO>().ReverseMap();
             CreateMap<Job, CreateJobDTO>().ReverseMap();
+            CreateMap<ApiUser, UserDTO>().ReverseMap();
 
         }
     }

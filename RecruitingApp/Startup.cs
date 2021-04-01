@@ -11,11 +11,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RecruitingApp.Configurations;
 using RecruitingApp.Data;
 using RecruitingApp.IRepository;
 using RecruitingApp.Repository;
+using RecruitingApp.Services;
 
 namespace RecruitingApp
 {
@@ -34,6 +36,10 @@ namespace RecruitingApp
             services.AddDbContext<DatabaseContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("sqlConnection")));
 
+            services.AddAuthentication();
+            services.ConfigureIdentity();
+            services.ConfigureJWT(Configuration);
+
             services.AddCors(c =>
             {
                 c.AddPolicy("OpenAccess", builder =>
@@ -44,6 +50,7 @@ namespace RecruitingApp
 
             services.AddAutoMapper(typeof(AutoMapperInitializer));
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IAuthManager, AuthManager>();
 
             services.AddSwaggerGen(c =>
             {

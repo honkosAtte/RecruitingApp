@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RecruitingApp.Data;
 
 namespace RecruitingApp.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20210401103549_AddedIdentity")]
+    partial class AddedIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,22 +46,6 @@ namespace RecruitingApp.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "b59919e1-b407-43d7-8869-0a69c0e36764",
-                            ConcurrencyStamp = "efa4d999-d863-4adb-bebe-a350874c5bc0",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        },
-                        new
-                        {
-                            Id = "ebe2342f-78b9-4c1f-b48b-a40d2dd886f6",
-                            ConcurrencyStamp = "1505b265-d471-4d74-8361-e84db2d582c6",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -291,10 +277,10 @@ namespace RecruitingApp.Migrations
                         {
                             Id = 3,
                             Application = "Haen tähän paikkaan, koska haluan rapata",
-                            Email = "kalle.kullonen@gmail.com",
-                            FirstName = "Kalle",
+                            Email = "atte.henkonen@outlook.com",
+                            FirstName = "Atte",
                             JobId = 3,
-                            LastName = "Kukkonen"
+                            LastName = "Henkonen"
                         });
                 });
 
