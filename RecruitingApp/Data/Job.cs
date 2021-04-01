@@ -14,6 +14,6 @@ namespace RecruitingApp.Data
         public string Description { get; set; }
 
          
-
+        public virtual IList<Applicant> Applicants { get; set; }
     }
 }

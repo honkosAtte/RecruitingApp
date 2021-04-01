@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using RecruitingApp.Configurations;
 using RecruitingApp.Data;
 
 namespace RecruitingApp
@@ -38,6 +39,8 @@ namespace RecruitingApp
                         .AllowAnyMethod()
                         .AllowAnyHeader());
             });
+
+            services.AddAutoMapper(typeof(AutoMapperInitializer));
 
             services.AddSwaggerGen(c =>
             {
