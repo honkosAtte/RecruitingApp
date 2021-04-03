@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 using RecruitingApp.Data;
 using RecruitingApp.Models;
+using RecruitingApp.Services;
 
 namespace RecruitingApp.Controllers
 {
@@ -20,14 +21,17 @@ namespace RecruitingApp.Controllers
         private readonly UserManager<ApiUser> _userManager;
         private readonly ILogger<AccountController> _logger;
         private readonly IMapper _mapper;
+        private readonly IAuthManager _authManager;
+
 
         public AccountController(UserManager<ApiUser> userManager,
 
-            ILogger<AccountController> logger, IMapper mapper)
+            ILogger<AccountController> logger, IMapper mapper, IAuthManager authManager)
         {
             _userManager = userManager;
             _logger = logger;
             _mapper = mapper;
+            _authManager = authManager;
         }
 
         [HttpPost]
@@ -70,34 +74,32 @@ namespace RecruitingApp.Controllers
         }
 
 
-        //[HttpPost]
-        //[Route("login")]
-        //public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
-        //{
-        //    _logger.LogInformation($"Login attempt for {loginDTO.Email}");
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
+        {
+            _logger.LogInformation($"Login attempt for {loginDTO.Email}");
 
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //    try
-        //    {
-        //        var result = await _signInManager.PasswordSignInAsync(loginDTO.Email, loginDTO.Password, 
-        //            false, false);
+            try
+            {
 
-        //        if (!result.Succeeded)
-        //        {
-        //            return Unauthorized(loginDTO);
-        //        }
-        //        return Accepted(result);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        _logger.LogError(e, $"Something went wrong in the {nameof(Login)}");
-        //        return Problem($"Something went wrong in the {nameof(Login)}", statusCode: 500);
-        //    }
-        //}
+                if (!await _authManager.ValidateUser(loginDTO))
+                {
+                    return Unauthorized();
+                }
+                return Accepted(new { Token = await _authManager.CreateToken()});
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, $"Something went wrong in the {nameof(Login)}");
+                return Problem($"Something went wrong in the {nameof(Login)}", statusCode: 500);
+            }
+        }
 
     }
 }

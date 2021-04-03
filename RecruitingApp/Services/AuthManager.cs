@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,11 +23,6 @@ namespace RecruitingApp.Services
             _userManager = userManager;
             _configuration = configuration;
         }
-        public async Task<bool> ValidateUser(LoginDTO userDTO)
-        {
-            var _user = await _userManager.FindByNameAsync(userDTO.Email);
-            return (_user != null && await _userManager.CheckPasswordAsync(_user, userDTO.Password));
-        }
 
         public async Task<string> CreateToken()
         {
@@ -46,7 +39,7 @@ namespace RecruitingApp.Services
             var expiration = DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings.GetSection("lifetime").Value));
 
             var token = new JwtSecurityToken(
-                issuer: jwtSettings.GetSection("validIssuer").Value,
+                issuer: jwtSettings.GetSection("Issuer").Value,
                 claims: claims,
                 expires: expiration,
                 signingCredentials: signingCredentials);
@@ -75,7 +68,14 @@ namespace RecruitingApp.Services
             var key = Environment.GetEnvironmentVariable("KEY");
             var secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
 
+
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
+        }
+
+        public async Task<bool> ValidateUser(LoginDTO userDTO)
+        {
+            _user = await _userManager.FindByNameAsync(userDTO.Email);
+            return (_user != null && await _userManager.CheckPasswordAsync(_user, userDTO.Password));
         }
     }
 }
