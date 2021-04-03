@@ -16,14 +16,14 @@ namespace RecruitingApp.Configurations.Entities
                 new IdentityRole
                 {
 
-                    Name = "User",
-                    NormalizedName = "USER"
+                    Name = "Applicant",
+                    NormalizedName = "APPLICANT"
                 },
                 new IdentityRole
                 {
 
-                    Name = "Admin",
-                    NormalizedName = "ADMIN"
+                    Name = "Recruiter",
+                    NormalizedName = "RECRUITER"
                 });
         }
     }

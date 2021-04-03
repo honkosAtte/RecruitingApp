@@ -28,6 +28,7 @@ namespace RecruitingApp.Controllers
             _mapper = mapper;
         }
 
+        [Authorize(Roles = "Recruiter")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -38,13 +39,12 @@ namespace RecruitingApp.Controllers
             return Ok(results);
         }
 
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Recruiter, Applicant")]
         [HttpGet("{id:int}", Name = "GetApplicant")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetApplicant(int id)
         {
-            // Adminstrator => Recruiter? Käyttäjä voi katsoa vain 
             var applicant = await _unitOfWork.Applicants.Get(q => q.Id == id, new List<string> { "Job" });
             var result = _mapper.Map<ApplicantDTO>(applicant);
             return Ok(result);
@@ -69,7 +69,7 @@ namespace RecruitingApp.Controllers
             return CreatedAtRoute("CreateApplicant", new { id = applicant.Id }, applicant);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Recruiter")]
         [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -98,7 +98,7 @@ namespace RecruitingApp.Controllers
 
         }
 
-        [Authorize]
+        [Authorize(Roles = "Recruiter, Applicant")]
         [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
