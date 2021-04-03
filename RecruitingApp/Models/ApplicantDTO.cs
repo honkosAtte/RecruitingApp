@@ -34,5 +34,10 @@ namespace RecruitingApp.Models
         public JobDTO Job { get; set; }
 
     }
+
+    public class UpdateApplicantDTO : CreateApplicantDTO
+    {
+
+    }
 }
     

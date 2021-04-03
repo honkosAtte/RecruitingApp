@@ -46,12 +46,10 @@ namespace RecruitingApp.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            try
-            {
-                var user = _mapper.Map<ApiUser>(userDTO);
+            var user = _mapper.Map<ApiUser>(userDTO);
                 user.UserName = userDTO.Email;
-                var result = await _userManager.CreateAsync(user, userDTO.Password);
+
+            var result = await _userManager.CreateAsync(user, userDTO.Password);
 
                 if (!result.Succeeded)
                 {
@@ -63,14 +61,8 @@ namespace RecruitingApp.Controllers
                     return BadRequest(ModelState);
                 }
 
-                await _userManager.AddToRolesAsync(user, userDTO.Roles);
-                return Accepted(result);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, $"Something went wrong in the {nameof(Register)}");
-                return Problem($"Something went wrong in the {nameof(Register)}", statusCode: 500);
-            }
+            await _userManager.AddToRolesAsync(user, userDTO.Roles);
+            return Accepted(result);
         }
 
 
@@ -85,20 +77,13 @@ namespace RecruitingApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            try
+            if (!await _authManager.ValidateUser(loginDTO)) 
             {
-
-                if (!await _authManager.ValidateUser(loginDTO))
-                {
                     return Unauthorized();
-                }
-                return Accepted(new { Token = await _authManager.CreateToken()});
             }
-            catch (Exception e)
-            {
-                _logger.LogError(e, $"Something went wrong in the {nameof(Login)}");
-                return Problem($"Something went wrong in the {nameof(Login)}", statusCode: 500);
-            }
+            
+            return Accepted(new { Token = await _authManager.CreateToken()});
+          
         }
 
     }

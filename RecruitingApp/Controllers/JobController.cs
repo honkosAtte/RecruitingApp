@@ -32,17 +32,9 @@ namespace RecruitingApp.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetJobs()
         {
-            try
-            {
-                var jobs = await _unitOfWork.Jobs.GetAll();
-                var result = _mapper.Map<IList<JobDTO>>(jobs);
-                return Ok(result);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, $"Something went wrong with the {nameof(GetJobs)}");
-                return StatusCode(500, "Internal Server Error. Please try again later");
-            }
+            var jobs = await _unitOfWork.Jobs.GetAll();
+            var result = _mapper.Map<IList<JobDTO>>(jobs);
+            return Ok(result);
         }
 
         [Authorize]
@@ -52,17 +44,10 @@ namespace RecruitingApp.Controllers
 
         public async Task<IActionResult> GetJob(int id)
         {
-            try
-            {
-                var job = await _unitOfWork.Jobs.Get(row => row.Id == id, new List<string>{"Applicants"});
-                var result = _mapper.Map<JobDTO>(job);
-                return Ok(result);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, $"Something went wrong with the {nameof(GetJob)}");
-                return StatusCode(500, "Internal Server Error. Please try again later");
-            }
+
+            var job = await _unitOfWork.Jobs.Get(row => row.Id == id, new List<string>{"Applicants"});
+            var result = _mapper.Map<JobDTO>(job);
+            return Ok(result);
         }
     }
 }

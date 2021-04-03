@@ -72,6 +72,8 @@ namespace RecruitingApp
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RecruitingApp v1"));
             
+            app.ConfigureGlobalExceptionHandler();
+
             app.UseHttpsRedirection();
             app.UseCors("OpenAccess");
 
