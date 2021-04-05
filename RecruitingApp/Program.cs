@@ -16,7 +16,9 @@ namespace RecruitingApp
         {
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.File(
-                    path: "c:\\recruitingapp\\logs\\log_.txt",
+                    //path: "c:\\recruitingapp\\logs\\log_.txt", => Change to relative path for Azure deployment
+                    path: "\\logs\\log_.txt",
+
                     outputTemplate:
                     "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
                     rollingInterval: RollingInterval.Day,
